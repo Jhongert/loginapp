@@ -8,7 +8,7 @@ const express = require('express'),
     session = require('express-session'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    mongo = require('mongo'),
+    mongo = require('mongodb'),
     mongoose = require('mongoose');
 
 // Connect to database
@@ -17,14 +17,14 @@ const db = mongoose.connection;
 
 // Routes
 const routes = require('./routes/index'),
-      users = require('./routes/users');
+     users = require('./routes/users');
 
 //Init app
-const app = express();
+var app = express();
 
 //View engine
-app.use('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs({ defaultLayout: layout }));
+app.set('views', path.join(__dirname, 'views'));
+app.engine('handlebars', exphbs({ defaultLayout: 'layout' }));
 app.set('view engine', 'handlebars');
 
 // BodyParser middleware
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookiesParser());
 
 // Static folder(js, css, img)
-app.use(express.static(path.join(__diename, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Express session
 app.use(session({
@@ -41,6 +41,10 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Express validation
 app.use(expValidator({
@@ -61,11 +65,11 @@ app.use(expValidator({
     }
 }));
 
-// Connect flash
+//Connect flash
 app.use(flash());
 
-// Global variables
-app.use((req, res, next) => {
+//Global variables
+app.use(function(req, res, next){
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
