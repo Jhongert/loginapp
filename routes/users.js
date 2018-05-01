@@ -16,20 +16,10 @@ router.get('/login', function(req, res){
 });
 
 router.post('/register', function(req, res){
-    // let user = new User(req.body);
-    // user.save(function(err){
-    //     if(err){
-    //         let data = {}
-    //         for (key in err.errors){
-    //             console.log(err.errors[key].message)
-    //         }
-    //     }
-    // })
-
-    let name = req.body.name;
-    let email = req.body.email;
-    let password = req.body.password;
-    let password2 = req.body.password2;
+    let name = req.body.name,
+        email = req.body.email,
+        password = req.body.password,
+        password2 = req.body.password2;
 
     req.checkBody('name', 'Name is requiered').notEmpty();
     req.checkBody('email', 'Email is not valid').isEmail();
@@ -39,12 +29,16 @@ router.post('/register', function(req, res){
     let errors = req.validationErrors();
 
      if(errors){
-         //console.log(errors)
+         let dataErr = []
          errors.map(err => {
-             console.log(err.msg)
+             dataErr.push(err.msg)
          })
+         res.json(dataErr)
     } else {
-        console.log('no error')
+        let user = new User(req.body);
+        user.save(function() {
+
+        })
     }
 });
 module.exports = router;

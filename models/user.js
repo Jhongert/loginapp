@@ -1,35 +1,43 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+	bcrypt = require('bcryptjs'),
+	Schema = mongoose.Schema;
 
-var Schema = mongoose.Schema;
-
-var UserSchema = new Schema({
+const UserSchema = new Schema({
 	name: {
-		type: String,
-		require: true
+		type: String
 	},
 	email: {
-		type: String,
-		require: true,
-		unique: true
+		type: String
 	},
 	password: {
-		type: String, 
-		require: true
+		type: String
 	}
 });
 
-// UserSchema.path('name').validate(function(val) {
-//     return val.length;
-// }, 'Name cannot be blank');
+const User = module.exports = mongoose.model('User', UserSchema);
 
-// UserSchema.path('email').validate(function(val) {
-//     return val.length;
-// }, 'Email cannot be blank');
+module.exports.createUser = function(newUser, cb){
+	bcrypt.genSalt(10, (err, salt) => {
+		bcrypt.hash(newUser.password, salt, (err, hash) =>{
+			newUser.password = hash;
+			newUser.save(cb);
+		});
+	});
+}
 
-// UserSchema.path('password').validate(function(val) {
-//     return val.length > 5;
-// }, 'Password has to be at least 6 characters long');
+module.exports.getUserByUsername = function(username, cb){
+	let query = {usename: username};
+	User.findOne(query, cb);
+}
 
-var User = mongoose.model('User', UserSchema);
+module.exports.getUserById = function(id, cb){
+	User.findById(id, cb);
+}
 
+module.exports.comparePassword = function(password, hash, cb){
+	bcrypt.compare(password, hash, (err, isMatch) => {
+		if(err) throw err;
+		cb(null, isMatch);
+	});
+}
 module.exports = User;

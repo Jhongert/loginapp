@@ -47,34 +47,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Express validation
-app.use(expValidator({
-    // errorFormatter: (param, msg, value) => {
-    //     let namespace = param.split('.'),
-    //         root = namespace.shift(),
-    //         formatParam = root;
-        
-    //     console.log(root)
-    //     while(namespace.length){
-    //         //formatParam += '[' + namespace.shift() + ']';
-    //         formatParam.push(namespace.shift());
-    //     }
-
-    //     return {
-    //         param : formatParam,
-    //         msg: msg,
-    //         value: value
-    //     };
-    //}
-}));
+app.use(expValidator());
 
 //Connect flash
 app.use(flash());
 
 //Global variables
-app.use(function(req, res, next){
+app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
     next();
 })
 
@@ -86,11 +69,4 @@ const PORT = process.env.PORT || 3000;
 app.set('port', PORT);
 app.listen(PORT, ()=> {
     console.log('Server started on port ' + PORT);
-} )
-
-// production error handler
-// no stacktraces leaked to user
-// app.use(function(err, req, res, next) {
-//     console.log(err.message)
-
-// });
+})
