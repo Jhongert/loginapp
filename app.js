@@ -87,3 +87,10 @@ app.set('port', PORT);
 app.listen(PORT, ()=> {
     console.log('Server started on port ' + PORT);
 } )
+
+// production error handler
+// no stacktraces leaked to user
+// app.use(function(err, req, res, next) {
+//     console.log(err.message)
+
+// });

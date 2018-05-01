@@ -1,32 +1,20 @@
 <h1>Register</h1>
-<form method="post" action="/users/register">
+<form id="registerForm" method="post" action="/users/register">
     <div class="input-field">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name">
-        {{#if errors.name}}
-            <label class="text-danger">{{ errors.name.msg }}</label>
-        {{/if}}
+        <input type="text" id="name" name="name" class="validate">
     </div>
     <div class="input-field">
         <label for="email">Email</label>
         <input type="email" id="email" name="email">
-        {{#if errors.email}}
-            <label class="text-danger">{{ errors.email.msg }}</label>
-        {{/if}}
     </div>
     <div class="input-field">
         <label for="password">Password</label>
         <input type="password" id="password" name="password">
-        {{#if errors.password}}
-            <label class="text-danger">{{ errors.password.msg }}</label>
-        {{/if}}
     </div>
     <div class="input-field">
         <label for="password2">Confirm password</label>
         <input type="password" id="password2" name="password2">
-        {{#if errors.password2}}
-            <label class="text-danger">{{ errors.password2.msg }}</label>
-        {{/if}}
     </div>
-    <button type="submit" class="btn waves-effect waves-light">Submit</button>
 </form>
+<button id="submitUser" class="btn waves-effect waves-light">Submit</button>
