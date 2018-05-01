@@ -48,21 +48,23 @@ app.use(passport.session());
 
 // Express validation
 app.use(expValidator({
-    errorFormatter: (param, msg, value) => {
-        let namespace = param.split('.'),
-            root = namespace.shift(),
-            formaParam = root;
+    // errorFormatter: (param, msg, value) => {
+    //     let namespace = param.split('.'),
+    //         root = namespace.shift(),
+    //         formatParam = root;
         
-        while(namespace.length){
-            formaParam += '[' + namespace.shift() + ']';
-        }
+    //     console.log(root)
+    //     while(namespace.length){
+    //         //formatParam += '[' + namespace.shift() + ']';
+    //         formatParam.push(namespace.shift());
+    //     }
 
-        return {
-            param : formaParam,
-            msg: msg,
-            value: value
-        };
-    }
+    //     return {
+    //         param : formatParam,
+    //         msg: msg,
+    //         value: value
+    //     };
+    //}
 }));
 
 //Connect flash
