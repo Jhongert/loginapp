@@ -45,15 +45,22 @@ $(document).ready(function(){
             password2: password2.val().trim()
         }
 
-        $.post('/users/register', data, function(res){
+        let captchaValue = $('#g-recaptcha-response').val()
 
-            if(res.error){ 
-                let span = $('<span class="red-text text-darken-1 helper-text">').text(res.error);
-                email.after(span);
-                email.focus();
+        $.post('/users/captcha', {'g-recaptcha-response': captchaValue}, (res) => {
+            if(res.success == 0) {
+                console.log("fail")
             } else {
-                window.location.href = "/users/login";
-            }
+                $.post('/users/register', data, function(res){
+                    if(res.error){ 
+                        let span = $('<span class="red-text text-darken-1 helper-text">').text(res.error);
+                        email.after(span);
+                        email.focus();
+                    } else {
+                        window.location.href = "/users/login";
+                    }
+                })
+            }   
         })
     })
 })

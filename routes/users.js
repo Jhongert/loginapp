@@ -2,7 +2,7 @@ const express = require('express'),
     router = express.Router(),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    //User = require('../models/user'),
+    request = require('request'),
     userController = require('../controllers/user');
 
 // Register
@@ -15,6 +15,30 @@ router.get('/login', function(req, res){
     res.render('login');
 });
 
+router.post('/captcha', (req, res) => {
+    if(req.body['g-recaptcha-response'] === undefined || 
+        req.body['g-recaptcha-response'] === '' || 
+        req.body['g-recaptcha-response'] === null)  {
+    
+        return res.json({"success" : 0});
+    } else {
+        const secretKey = "6LfcyFYUAAAAAPe9eBN43z8TOFG83857eRJE2ig-";
+
+        const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + 
+            secretKey + "&response=" + req.body['g-recaptcha-response'] + 
+            "&remoteip=" + req.connection.remoteAddress;
+        
+        request(verificationURL, function(error,response,body) {
+            body = JSON.parse(body);
+            
+            if(body.success !== undefined || !body.success) {
+                return res.json({"success" : 1});
+            } else {
+                return res.json({"success" : 0});
+            }
+        })
+    }
+})
 // Register new user
 router.post('/register', function(req, res){
     let name = req.body.name,
