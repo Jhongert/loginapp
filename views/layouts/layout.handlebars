@@ -7,30 +7,55 @@
     <title>Login app</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/style.css"
 </head>
 <body>
     {{!-- <div class="container"> --}}
       <div class="header clearfix">
         <nav class="teal">
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            <ul class="right hide-on-med-and-down">
+            <div class="container">
+                <a href="#" data-target="mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    {{#if user}}
+                        <li><a href="/">Dashboard</a></li>
+                        <li><a href="/users/logout">Logout</a></li>
+                    {{else}}
+                        <li><a href="/users/register">Register</a></li>
+                        <li><a href="/users/login">Login</a></li>
+                    {{/if}}
+                </ul>
+                {{#if user}}
+                    <span class="right">Welcome {{user.name}}</span>
+                {{/if}}
+            </div>
+        </nav>
+        <ul class="sidenav" id="mobile">
+            {{#if user}}
                 <li><a href="/">Dashboard</a></li>
+                <li><a href="/users/logout">Logout</a></li>
+            {{else}}
                 <li><a href="/users/register">Register</a></li>
                 <li><a href="/users/login">Login</a></li>
-                <li><a href="users/logout">Logout</a></li>
-            </ul>
-        </nav>
-        <ul class="sidenav" id="mobile-demo">
-            <li><a href="/">Dashboard</a></li>
-            <li><a href="/users/register">Register</a></li>
-            <li><a href="/users/login">Login</a></li>
-            <li><a href="users/logout">Logout</a></li>
+            {{/if}}
         </ul>
       </div>
     <div class="container">
       <div class="row">
         <div class="col s12 l8 offset-l2">
-              {{{ body }}}
+            {{#if success_msg}}
+                <p class="success">{{success_msg}}</p>
+            {{/if}}
+
+            {{#if error_msg}}
+                <p class="error">{{error_msg}}</p>
+            {{/if}}
+
+            {{#if error}}
+                <p class="error">{{error}}</p>
+            {{/if}}
+            
+            {{{ body }}}
+            
         </div>
       </div>
     </div> <!-- /container -->

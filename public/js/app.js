@@ -38,6 +38,22 @@ $(document).ready(function(){
 
         if(!valid) return false;
 
-        $('#registerForm').submit();
+        const data = {
+            name: name.val().trim(),
+            email: email.val().trim(),
+            password: password.val().trim(),
+            password2: password2.val().trim()
+        }
+
+        $.post('/users/register', data, function(res){
+
+            if(res.error){ 
+                let span = $('<span class="red-text text-darken-1 helper-text">').text(res.error);
+                email.after(span);
+                email.focus();
+            } else {
+                window.location.href = "/users/login";
+            }
+        })
     })
 })

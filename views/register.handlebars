@@ -1,4 +1,7 @@
 <h1>Register</h1>
+{{#if error_msg}}
+    <div>This email has taken already</div>
+{{/if}}
 <form id="registerForm" method="post" action="/users/register">
     <div class="input-field">
         <label for="name">Name</label>
