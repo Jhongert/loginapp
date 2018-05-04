@@ -5,7 +5,9 @@ const express = require('express'),
     request = require('request'),
     userController = require('../controllers/user');
 
-require('dotenv').config();
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config();
+}
 
 // Register
 router.get('/register', (req, res) =>{
@@ -24,7 +26,7 @@ router.post('/captcha', (req, res) => {
     
         return res.json({"success" : 0});
     } else {
-        const secretKey = process.env.SECRET_KEY;
+        const secretKey = process.env.CAPTCHA_SECRET_KEY;
 
         const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + 
             secretKey + "&response=" + req.body['g-recaptcha-response'] + 
