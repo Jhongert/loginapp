@@ -4,9 +4,9 @@ const mongoose = require('mongoose'),
 
 require('../models/user');
 
-exports.createUser = function(data, cb){
+exports.createUser = (data, cb) => {
 	bcrypt.genSalt(10, (err, salt) => {
-		bcrypt.hash(data.password, salt, (err, hash) =>{
+		bcrypt.hash(data.password, salt, (err, hash) => {
             data.password = hash;
             newUser = new User(data);
 			newUser.save(cb);
@@ -14,16 +14,14 @@ exports.createUser = function(data, cb){
 	});
 }
 
-exports.getUserByEmail = function(email, cb){
+exports.getUserByEmail = (email, cb) => {
 	let query = {email: email};
 	User.findOne(query, cb);
 }
 
-exports.getUserById = function(id, cb){
-	User.findById(id, cb);
-}
+exports.getUserById = (id, cb) => User.findById(id, cb)
 
-exports.comparePassword = function(password, hash, cb){
+exports.comparePassword = (password, hash, cb) => {
 	bcrypt.compare(password, hash, (err, isMatch) => {
 		if(err) throw err;
 		cb(null, isMatch);
