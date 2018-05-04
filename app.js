@@ -12,9 +12,9 @@ const express = require('express'),
     mongoose = require('mongoose');
 
 // Connect to database
-mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/loginapp';
+//mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/loginapp';
 mongoose.connect(mongoDB);
-//mongoose.connect('mongodb://heroku_w9wxzlql:sdf91ct6g5enn7p9gh8urs1ueh@ds115350.mlab.com:15350/heroku_w9wxzlql')
+mongoose.connect('mongodb://heroku_w9wxzlql:sdf91ct6g5enn7p9gh8urs1ueh@ds115350.mlab.com:15350/heroku_w9wxzlql')
 const db = mongoose.connection;
 
 // Routes
