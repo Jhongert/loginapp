@@ -5,13 +5,15 @@ const express = require('express'),
     request = require('request'),
     userController = require('../controllers/user');
 
+require('dotenv').config();
+
 // Register
-router.get('/register', function(req, res){
+router.get('/register', (req, res) =>{
     res.render('register');
 });
 
 // Login
-router.get('/login', function(req, res){
+router.get('/login', (req, res) =>{
     res.render('login');
 });
 
@@ -22,7 +24,7 @@ router.post('/captcha', (req, res) => {
     
         return res.json({"success" : 0});
     } else {
-        const secretKey = "6LfcyFYUAAAAAPe9eBN43z8TOFG83857eRJE2ig-";
+        const secretKey = process.env.SECRET_KEY;
 
         const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + 
             secretKey + "&response=" + req.body['g-recaptcha-response'] + 
@@ -40,7 +42,7 @@ router.post('/captcha', (req, res) => {
     }
 })
 // Register new user
-router.post('/register', function(req, res){
+router.post('/register', (req, res) =>{
     let name = req.body.name,
         email = req.body.email,
         password = req.body.password,
@@ -64,7 +66,7 @@ router.post('/register', function(req, res){
         userController.getUserByEmail(email,
             (err, user) => {
                 if (user) {
-                    res.json({'error': 'This email already exist'})
+                    res.json({'error': 'This email is already taken'})
                 } else {
                     const data = {
                         name: name,

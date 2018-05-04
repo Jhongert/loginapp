@@ -49,7 +49,9 @@ $(document).ready(function(){
 
         $.post('/users/captcha', {'g-recaptcha-response': captchaValue}, (res) => {
             if(res.success == 0) {
-                console.log("fail")
+                let span = $('<span class="red-text text-darken-1 helper-text">');
+                    span.text('Select the captcha');
+                    $('.g-recaptcha').after(span);
             } else {
                 $.post('/users/register', data, function(res){
                     if(res.error){ 

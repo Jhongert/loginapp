@@ -1,17 +1,14 @@
 const express = require('express'),
     router = express.Router();
    
-
-// Homepage
-router.get('/', ensureLoggedIn, function(req, res){
-    res.render('index');
-});
-
 function ensureLoggedIn(req, res, next){
-   if(req.isAuthenticated()){
+    if(req.isAuthenticated()){
         return next();
-   } else {
-       res.redirect('/users/login');
-   }
+    } 
+    res.redirect('/users/login');
 }
+    
+// Homepage
+router.get('/', ensureLoggedIn, (req, res) => res.render('index'));
+
 module.exports = router;
