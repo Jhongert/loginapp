@@ -5,19 +5,47 @@ const express = require('express'),
     request = require('request'),
     userController = require('../controllers/user');
 
+
 if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config();
 }
 
-// Register
-router.get('/register', (req, res) =>{
-    res.render('register');
+passport.use(new LocalStrategy(
+    {
+        usernameField: 'email',
+        passwordField: 'password'
+    },
+    (email, password, done) => {
+        userController.getUserByEmail(email, (err, user) => {
+            if (err) throw err;
+            if (!user) {
+                return done(null, false, { message: "Unknow User" });
+            }
+            userController.comparePassword(password, user.password, (err, isMatch) => {
+                if (err) throw err;
+                if (isMatch) {
+                    return done(null, user);
+                } else {
+                    return done(null, false, {message: "Invalid password"});
+                }
+            });
+        });
+    }
+));
+
+passport.serializeUser((user, done) => done(null, user.id))
+
+passport.deserializeUser((id, done) => {
+    userController.getUserById(id, (err, user) => {
+        done(err, user);
+    });
 });
 
+// Register
+router.get('/register', (req, res) => res.render('register'));
+
 // Login
-router.get('/login', (req, res) =>{
-    res.render('login');
-});
+router.get('/login', (req, res) => res.render('login'));
 
 router.post('/captcha', (req, res) => {
     if(req.body['g-recaptcha-response'] === undefined || 
@@ -27,12 +55,12 @@ router.post('/captcha', (req, res) => {
         return res.json({"success" : 0});
     } else {
         const secretKey = process.env.CAPTCHA_SECRET_KEY;
-
+      
         const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + 
             secretKey + "&response=" + req.body['g-recaptcha-response'] + 
             "&remoteip=" + req.connection.remoteAddress;
         
-        request(verificationURL, function(error,response,body) {
+        request(verificationURL, (error,response,body) => {
             body = JSON.parse(body);
             
             if(body.success !== undefined || !body.success) {
@@ -43,6 +71,7 @@ router.post('/captcha', (req, res) => {
         })
     }
 })
+
 // Register new user
 router.post('/register', (req, res) =>{
     let name = req.body.name,
@@ -86,38 +115,6 @@ router.post('/register', (req, res) =>{
     }
 });
 
-passport.use(new LocalStrategy(
-    {
-        usernameField: 'email',
-        passwordField: 'password'
-    },
-    (email, password, done) => {
-        userController.getUserByEmail(email, (err, user) => {
-            if (err) throw err;
-            if (!user) {
-                return done(null, false, { message: "Unknow User" });
-            }
-            userController.comparePassword(password, user.password, (err, isMatch) => {
-                if (err) throw err;
-                if (isMatch) {
-                    return done(null, user);
-                } else {
-                    return done(null, false, {message: "Invalid password"});
-                }
-            });
-        });
-    }
-));
-
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-})
-
-passport.deserializeUser((id, done) => {
-    userController.getUserById(id, (err, user) => {
-        done(err, user);
-    });
-});
 
 router.post('/login', 
     passport.authenticate('local', {

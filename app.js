@@ -65,6 +65,10 @@ app.use((req, res, next) => {
 app.use('/', routes);
 app.use('/users', users);
 
+app.use(function(req, res){
+    res.render('e404');
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.set('port', PORT);
